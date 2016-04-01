@@ -1,0 +1,38 @@
+with "win32ada";
+with "gtkada";
+with "apq";
+
+project Netweather is
+
+   type Gtkada_Kind_Type is
+      ("static", "relocatable");
+   for Object_Dir use "build";
+   for Main use ("netweather.adb", "test_serial.adb", "test_mock_data.adb", "test_config.adb");
+   for Source_Dirs use (".", "gui");
+   GTKADA_TYPE : Gtkada_Kind_Type := external ("GTKADA_TYPE");
+
+   package Ide is
+      for Default_Switches ("examiner") use ("/profile=sequential", "/flow_analysis=information", "/rules=none");
+      for Default_Switches ("sparkformat") use ("/noadd_modes", "/compress");
+      for Default_Switches ("adacontrol") use ("-f", "netweather.aru", "-F", "gnat_short");
+
+      case GTKADA_TYPE is
+
+         when "relocatable" =>
+            for Vcs_Kind use "Subversion";
+
+         when "static" =>
+
+      end case;
+   end Ide;
+
+   package Compiler is
+      for Default_Switches ("ada") use ("-gnato", "-fstack-check", "-g", "-gnata", "-gnat05");
+   end Compiler;
+
+   package Linker is
+      for Switches ("data_source.adb") use ("-g");
+   end Linker;
+
+end Netweather;
+

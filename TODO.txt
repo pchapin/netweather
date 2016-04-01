@@ -1,0 +1,12 @@
+
++ The Database package does not yet implement the Get_First_Date and Get_Last_Date functions.
+These functions are needed for the mock data test program. Implementing them will require
+constructing an appropriate SQL query and executing it.
+
++ Get the database set up properly. NetWeather currently requires the tables to be created
+before the program runs. Probably the precise steps necessary (SQL statements) should be
+recorded somewhere.
+
++ The web interface is mostly incomplete. This is the last major component of the program that
+needs building.
+

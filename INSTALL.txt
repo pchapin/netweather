@@ -1,0 +1,72 @@
+FILE        : INSTALL.txt
+LAST REVISED: 2008-04-28
+AUTHORS     : NetWeather Contributors
+=====================================
+
+This document describes how to set up a NetWeather server. There are a significant number of
+components necessary so the installation isn't trivial. At some point this software should be
+packaged in a way that makes the installation process easier.
+
+Currently the assumption is that all the necessary tools and libraries to actually build the
+system will be installed on the running NetWeather server. This is convenient in some ways; it
+allows a developer the option of making last minute changes to the system in situ. It also
+allows the operator to easily apply bug fixes by simply updating a working copy of the source
+and recompiling as needed.
+
+Required Third Party Components
+-------------------------------
+
++ TortoiseSVN
+
+This is needed to check out the source code. Also if any changes to the source prove necessary,
+TortoiseSVN can be used to commit those changes back to the repository.
+
++ GNAT GPL 2008
+
+Technically the Ada compiler is not needed for running NetWeather. However, it may prove useful
+to have it available in case some last minute tweaks to the code are necessary (as described
+above).
+
++ GtkAda (tested with v2.10.0)
+
+This component is required for the user interface. Install it in the "usual" location and be
+sure C:\GtkAda\bin is in the path (for access to the DLLs). Really only the DLLs are needed at
+run time, but it is easiest to just install the entire package. Unfortunately the GtkAda
+installer will want to build the libraries, thus requiring the Ada compiler as a prerequisite.
+
++ Win32Ada
+
+This component is needed for operating system level access to the serial port. It should be
+installed in the default location. No special post-installation steps are needed.
+
++ PostgreSQL
+
+The database server needs to be installed in the default way. Create the necessary tables
+manually [provide details here]. NetWeather assumes the user 'postgres' with password
+'frenchfry.'
+
++ APQ
+
+The APQ database access library needs to be installed. The DLLs need to be copied to a folder in
+the path.
+
++ AWS
+
+The compiled AWS binaries need to be installed with the DLLs copied to a folder in the path. The
+ADA_PROJECT_PATH environment variable needs to be set to point at the aws.gpr file.
+
+Hardware
+--------
+
+Connect the hardware to COM1 on the NetWeather server. This is necessary; currently NetWeather
+does not provide a way to configure which serial port it uses. Review the contents of the
+Config.txt file in the NetWeather build folder. Specifically adjust the value of the calibration
+settings as appropriate.
+
+Operation
+---------
+
+Compile and run the NetWeather server; enable the hardware in the console interface. Manual
+queries can be conducted against the database to view the data being entered into the system.
+Point a web browser at the NetWeather server (port 80) to view the web interface to the system.
+

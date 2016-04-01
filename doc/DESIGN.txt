@@ -1,0 +1,91 @@
+
+Design of NetWeather
+====================
+
+This document describes the design of the NetWeather server application. This document does not
+(currently) describe the weather station hardware design. In what follows the name "NetWeather"
+refers only to the server application.
+
+
+Static Organization
+-------------------
+
+NetWeather has five major modules:
+
+1. The Console Interface. This module is responsible for interacting with a user seated at the
+server machine itself. It allows the user to perform administrative tasks such as configuring
+the system, running tests, and managing the database. It also allows the user to perform simple
+queries of the data (primarly to verify that it is reasonable and correct).
+
+Initially this module can be implemented as a simple "scrolling text" interface using standard
+library subprograms for console I/O. A future version of this module might provide a GUI
+interface as an option. Note that this module is also responsible for processing command line
+arguments and arranging for any necessary initialization and shutdown needs of the other
+modules.
+
+2. The Web Interface. This module provides the main user interface to the NetWeather system. It
+implements an HTTP server that responds to queries from standard web browsers. This module
+extracts weather data from the database module, formats it into suitable HTML, and sends it to
+the user's web browser.
+
+It should also be possible, as a future extension, to support an administrative web interface as
+well. This implies that the underlying administrative functionality should be expressed in
+separate packages that both the console interface and, eventually, the web interface modules can
+call.
+
+3. The Database. All of the weather data will be stored in a database module that uses some kind
+of persistent storage back end. Initially the data could be stored in a flat file (or an XML
+file?). However, eventually the data should be stored in a database server. Not that the
+interface to this module shouldn't change when the back end is upgraded from a flat file to a
+database server.
+
+4. The Data Source. This module reads raw data from the weather station hardware and formats it
+as necessary for use by the rest of the program. It also performs any hardware initialization
+and shutdown activities that are necessary. Finally, for purposes of testing, it provides an
+option to generate "mock" data that can be used when the actual weather station hardware is not
+available.
+
+5. The Support Library. This module provides various library packages that support the rest of
+the program. This includes utility packages for handling calendar dates (for example) as well as
+computational packages for doing data processing.
+
+Each of the five modules are expressed as packages with, perhaps, child packages supporting
+them. These packages are as follows
+
+MODULE             | PARENT PACKAGE    | NOTES (See Dynamic Organization)
+-------------------+-------------------+------------------------------------------
+Console Interface  | Console_Interface | Executes in environment task.
+Web Interface      | Web_Interface     | Task listening for HTTP connections.
+Database           | Database          | Server task waits for data requests.
+Data Source        | Data_Source       | Task listening to serial port.
+Support Library    | Support           | Child package for each library component.
+
+
+Dynamic Organization
+---------------------
+
+NetWeather is multi-tasking. This is desirable because the three sources of input: the weather
+station hardware, the console user, and the web user, are all asynchronous. Any of these sources
+can provide input at any time. Each input source will be serviced by a task that waits for input
+from that source, processes that input, and then loops back to wait for more input.
+
+The Console Interface will run in the main environment task and will tend to program-wide
+startup and shutdown duties as well as handle the administrative console. The Web Interface and
+Data Source modules will contain library level tasks that are terminated by way of specific
+commands sent to them from the Console Interface. The Database module, on the other hand, will
+run a server task that processes data requests from the other parts of the program. The Database
+module will terminate automatically when the program is shutting down by way of a terminate
+alternative. The Support Library module will be entirely passive and contains no tasks (but it
+may contain some protected types as necessary).
+
+
+Testing
+-------
+
+Each module will provide appropriate unit tests by way of a procedure Do_Tests. This procedure
+raises the exception Support.Test_Failure if any of the tests fail. The Console Interface module
+will provide a command interface that allows the administrator to run the unit tests
+interactively. In other words, the testing harness will be built into the program and the
+administrative user can exercise the tests at any time. It is expected that the initial version
+of NetWeather will be little more than testing infrastructure.
+

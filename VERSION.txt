@@ -1,0 +1,13 @@
+
+FILE   : VERSION.txt
+REVISED: 2008-04-30
+SUBJECT: Version history of NetWeather
+======================================
+
+Version 1.0
+-----------
+
+This is the version created by the Spring 2008 class of ELT-2720 and CIS-2720 students.
+Specifically in Williston Joshua Bouffard and Nick West, and in Randolph Cooper Bills, Michael
+Dominguez, Rebecca Favreau, and Chadrick Hess. This version does not actually work, but it seems
+like it is probably close to working.

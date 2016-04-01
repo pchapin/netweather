@@ -1,0 +1,21 @@
+<html>
+<head>
+	<title>NetWeather Data :: Generated @_NOW_@</title>
+</head>
+
+<body>
+<h3>Stuff for top</h3>
+
+
+
+	<TABLE>
+     	@@TABLE@@
+        	<TR>
+        	<TD>@_TIME_@
+        	<TD>@_SPEED_@
+		<TD>@_DIRECTION_@
+     	@@END_TABLE@@
+     	</TABLE>
+
+</body>
+</html>
